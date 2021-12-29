@@ -80,7 +80,19 @@ const applyClasses = (el, top) => {
  * @param  {array} $elements         array of elements nodes
  * @return {void}
  */
-const handleScroll = $elements =>
-  $elements.forEach((el, i) => applyClasses(el, window.pageYOffset));
+const handleScroll = ($elements, options) => {
+  const observer =
+    options && options.scrollObject
+      ? document.querySelector(options.scrollObject)
+      : null;
+  $elements.forEach((el, i) => {
+    applyClasses(
+      el,
+      observer
+        ? observer.getBoundingClientRect().y + observer.scrollTop
+        : window.pageYOffset
+    );
+  });
+};
 
 export default handleScroll;

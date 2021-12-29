@@ -27,6 +27,7 @@ let initialized = false;
  * Default options
  */
 let options = {
+  scrollObject: null,
   offset: 120,
   delay: 0,
   easing: 'ease',
@@ -52,17 +53,23 @@ const initializeScroll = function initializeScroll() {
   // Extend elements objects in $aosElements with their positions
   $aosElements = prepare($aosElements, options);
   // Perform scroll event, to refresh view and show/hide elements
-  handleScroll($aosElements);
+  handleScroll($aosElements, options);
 
   /**
    * Handle scroll event to animate elements on scroll
    */
-  window.addEventListener(
-    'scroll',
-    throttle(() => {
-      handleScroll($aosElements, options.once);
-    }, options.throttleDelay)
-  );
+  let win =
+    options && options.scrollObject
+      ? document.querySelector(options.scrollObject)
+      : window;
+  if (win) {
+    win.addEventListener(
+      'scroll',
+      throttle(() => {
+        handleScroll($aosElements, options);
+      }, options.throttleDelay)
+    );
+  }
 
   return $aosElements;
 };
